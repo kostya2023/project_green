@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" href="../static/favicons/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../static/css/dashboard_Style.css"> <!-- Подключение CSS файла -->
+</head>
+<body>
+
+<header class="header-container">
+    <a href="/" class="header-item">SDTP - Secure Data Transfer Protocol</a>
+    <a href="#" class="header-item">Монитор</a>
+    <a href="#" class="header-item">Управление клиентом</a>
+    <a href="#" class="header-item">Управление сервером</a>
+    <a href="#" class="header-item">Настройка протокола</a>
+    <a href="#" class="header-item">LOGIN_USERNAME</a>
+</header>
+<h1>Главное меню</h1>
+<div class="root">
+    <div class="box">
+        <h2>Окно уведомлений</h2>
+        <div id="notifications">Здесь будут уведомления...</div>
+    </div>
+    <div class="box">
+        <h2>Консоль сервера</h2>
+        <div id="serverConsole">Вывод консоли сервера...</div>
+    </div>
+    <div class="box">
+        <h2>Консоль клиента</h2>
+        <div id="clientConsole">Вывод консоли клиента...</div>
+    </div>
+    <div class="box">
+        <h2>Последние подключения</h2>
+        <div id="recentConnections">Информация о последних подключениях...</div>
+    </div>
+    <div class="box">
+        <h2>Статусы сертификатов HTTPS</h2>
+        <div id="httpsCertificates">Статусы HTTPS сертификатов...</div>
+    </div>
+    <div class="box">
+        <h2>Статусы кастомных сертификатов</h2>
+        <div id="customCertificates">Статусы кастомных сертификатов...</div>
+    </div>
+    <div class="box">
+        <h2>Unix Timestamp</h2>
+        <div id="unixTimestamp">Текущий Unix Timestamp:</div>
+    </div>
+    <div class="box">
+        <h2>Количество пользователей</h2>
+        <div id="userListValue">Текущее количество пользователей:</div>
+    </div>
+    <div class="box">
+        <h2>Статус токена</h2>
+        <div id="tokenListValue">Текущий статус токена:</div>
+    </div>
+</div>
+<script src="../static/js/dashboard_index.js"></script>
+</body>
+</html>

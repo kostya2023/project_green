@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f3e6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+}
+
+.root{
+    padding: 2.5%;
+}
+
+h1{
+    color: white;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+.know_pass{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2%;
+}
+
+.login_container {
+    margin-top: 30%;
+    background-color: #42c246;
+    padding: 10%;
+    border-radius: 10px;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.1);
+}
+
+.login_container {
+    text-align: center;
+    color: white;
+}
+
+.form_group {
+    margin-bottom: 4%;
+    margin-right: 8%;
+}
+
+.form_group input {
+    width: 100%;
+    padding: 4%;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+}
+
+.login_button {
+    width: 100%;
+    padding: 4%;
+    background-color: white;
+    color: #4CAF50;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.login_button:hover {
+    color: white;
+    background-color: #3d8b40;
+    transition-duration: 0.3s;
+}
+
+hr{
+    color:  white;
+    border: 3px solid white;
+}
+
+a:hover{
+    color: white;
+}
+
+a{
+    color: #e6f3e6;
+}

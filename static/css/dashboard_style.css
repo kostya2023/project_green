@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f3e6; /* Цвет фона */
+    width: 100%;
+    margin: 0;
+}
+
+.header-container {
+    display: grid;
+    grid-template-columns: repeat(6, 0.5fr); /* 6 столбцов одинаковой ширины */
+    background-color: #42c246; /* Цвет фона хедера */
+    padding: 10px; /* Отступы внутри хедера */
+}
+
+.header-item {
+    color: #e6f3e6; /* Цвет текста ссылок */
+    text-align: center; /* Выравнивание текста по центру */
+    text-decoration: none; /* Убираем подчеркивание у ссылок */
+    padding: 15px; /* Отступы внутри ссылок */
+    transition: background-color 0.3s; /* Плавный переход цвета фона */
+}
+
+.header-item:hover {
+    background-color: #3d8b40; /* Цвет фона при наведении */
+    color: white; /* Цвет текста при наведении */
+}
+
+.root {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 3 колонки */
+    grid-template-rows: repeat(10, 1fr); /* 3 строки */
+    gap: 10px; /* Промежутки между ячейками */
+    padding: 20px; /* Отступы вокруг сетки */
+}
+
+.box {
+    background-color: #ffffff; /* Цвет фона ячеек */
+    border: 1px solid #42c246; /* Обводка ячеек */
+    border-radius: 5px; /* Закругление углов */
+    padding: 10px; /* Отступы внутри ячеек */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Тень для ячеек */
+}
+
+/* Индивидуальные стили для заголовков в окнах */
+.box h2 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    color: #42c246;
+}
+
+h1{
+    text-align: center;
+    color: #42c246;
+}

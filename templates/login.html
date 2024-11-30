@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/login_style.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="../static/favicons/favicon.ico" type="image/x-icon">
+    <title>Вход в панель управления SDTP</title>
+</head>
+<body>
+    <div class="root">
+        <div class="login_container">
+            <h1>SDTP - Secure Data Transfer Protocol</h1>
+            <hr>
+            <h1>Вход</h1>
+            <form id="loginForm">
+                <div class="form_group">
+                    <input type="text" id="username" placeholder="Имя пользователя" required>
+                </div>
+                <div class="form_group">
+                    <input type="password" id="password" placeholder="Пароль" required>
+                </div>
+                <div class="know_pass">
+                    <a href="/">Забыли пароль?</a>
+                </div>
+                <button type="submit" class="login_button">Войти</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script src="../static/js/login.js"></script>
+</body>
+</html>
