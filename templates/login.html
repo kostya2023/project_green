@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/login_style.css">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="../static/favicons/favicon.ico" type="image/x-icon">
     <title>Вход в панель управления SDTP</title>
 </head>
@@ -14,12 +13,13 @@
             <h1>SDTP - Secure Data Transfer Protocol</h1>
             <hr>
             <h1>Вход</h1>
-            <form id="loginForm">
+            <form id="loginForm" method="POST" action="/login/api">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}"> <!-- CSRF токен -->
                 <div class="form_group">
-                    <input type="text" id="username" placeholder="Имя пользователя" required>
+                    <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
                 </div>
                 <div class="form_group">
-                    <input type="password" id="password" placeholder="Пароль" required>
+                    <input type="password" id="password" name="password" placeholder="Пароль" required>
                 </div>
                 <div class="know_pass">
                     <a href="/">Забыли пароль?</a>
@@ -32,3 +32,7 @@
     <script src="../static/js/login.js"></script>
 </body>
 </html>
+
+
+
+

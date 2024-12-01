@@ -1,36 +1,40 @@
 import sys
 sys.path.append(".")
 from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
-from flask_wtf.csrf import CSRFProtect
 from libs import database
-from libs import generate_keys
-import time
+from libs.timer import start_timer
+import random
 
-csrf_tok = generate_keys.generate_random_key(1024)
+app = Flask(__name__)
 
-app = Flask(__name__)  # Исправлено имя на __name__
-app.secret_key = csrf_tok
-csrf = CSRFProtect(app)
-
-def check_cookies(IP):
+def check_cookies(IP, session_id, own_ip):
     """Функция для проверки куков и получения данных из базы."""
-    cookie_data = database.get_data("database.db", "SELECT cookie_id, csrf FROM Cookie WHERE own_ip = ?", (IP,))
 
-    if cookie_data:
-        cookie_id, csrf_token = cookie_data
-        cookie_session = request.cookies.get('session_id')
-        cookie_csrf = request.cookies.get("csrf")
+    db_ip = database.get_data("database.db", "SELECT own_ip FROM Cookie WHERE own_ip = ?", (IP,))
+    
+    if db_ip != None:
+        if db_ip == own_ip:
+            session_id_db = database.get_data("database.db", "SELECT cookie_id FROM Cookie WHERE own_ip = ?", (own_ip,))
+            if session_id_db == session_id:
+                return True
+            else:
+                return False
+        else:
+            return False
+    else:
+        return False
+    
 
-        # Проверяем идентификатор сессии и CSRF токен
-        if cookie_id == cookie_session and csrf_token == cookie_csrf:
-            return True
-    return False
+
 
 @app.route("/login")
 def login():
     IP = request.remote_addr
-
-    if check_cookies(IP):
+    
+    session_id = request.cookies.get("session_id")
+    own_ip = request.cookies.get("own_ip")
+    
+    if check_cookies(IP, session_id, own_ip):
         return redirect(url_for("dashboard"))
     else:
         return render_template("login.html")
@@ -38,8 +42,10 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     IP = request.remote_addr
-
-    if check_cookies(IP):
+    session_id = request.cookies.get("session_id")
+    own_ip = request.cookies.get("own_ip")
+    
+    if check_cookies(IP, session_id, own_ip):
         return render_template("dashboard.html")
     else:
         return redirect(url_for("login"))
@@ -47,38 +53,57 @@ def dashboard():
 @app.route("/")
 def redirecto():
     IP = request.remote_addr
-
-    if check_cookies(IP):
+    session_id = request.cookies.get("session_id")
+    own_ip = request.cookies.get("own_ip")
+    
+    if check_cookies(IP, session_id, own_ip):
         return redirect(url_for("dashboard"))
     else:
         return redirect(url_for("login"))
-
-
+    
 @app.route("/login/api", methods=['POST'])
 def login_api():
-    data = request.get_json()
+    package = request.get_json()
 
-    if data["type"] == "ident":
-        username = data["username"]
-        status = database.check_data("database.db", "SELECT Username FROM Users WHERE Username = ?", (username,))
-        if status:
-            return jsonify({"type" : "ident", "status" : "Finded"}), 200
-    elif data["type"] == "auth":
-        username = data["username"]
-        passwd = data["passwd"]
+    if package["type"] == "ident":
+        user = package["username"]
+        db_user = database.get_data("database.db", "SELECT Username FROM Users WHERE Username = ?", (user,))
 
-        passwd_database = database.get_data("database.db", "SELECT Passwd FROM Users WHERE Username = ?", (username,))
-
-        if passwd_database == passwd:
-            resp = make_response("Кука установлена!")
-            resp.set_cookie('session_id', username, max_age=60*60, secure=True, samesite='Lax')
-            resp.set_cookie('own_ip', str(request.remote_addr), max_age=60*60, secure=True, samesite='Lax')
-            resp.set_cookie('csrf', csrf_tok, max_age=60*60, secure=True, samesite='Lax')
-            return jsonify({"type" : "auth", "status" : "passwd_valid", "csrf": csrf_tok}), 200
+        if db_user == user:  # Убедитесь, что db_user содержит нужное значение
+            return jsonify({"type": "ident", "status": "finded"}), 200
         else:
-            return jsonify({"type" : "error", "message" : "Инвалид пароль"}), 401
+            return jsonify({"type": "ident", "status": "not_finded"}), 200
 
-    return jsonify({"type": "error", "message": "Invalid credentials."}), 401
+    elif package["type"] == "auth":
+        user = package["username"]
+        passwd = package["password"]
 
-if __name__ == "__main__":  # Исправлено имя на "__main__"
-    app.run(host="0.0.0.0", port=5000, debug=True)  # Запуск приложения
+        db_pass = database.get_data("database.db", "SELECT Passwd FROM Users WHERE Username = ?", (user,))
+
+        if db_pass == passwd:
+
+            resp = make_response(jsonify({"type": "auth", "status": "pass_valid"}), 200)
+            
+            session_id = str(random.randint(1, 99999999))
+                
+            resp.set_cookie("session_id", session_id, max_age=3600, secure=True, httponly=True)
+            resp.set_cookie("username", user, max_age=3600, secure=True, httponly=False)
+            resp.set_cookie("own_ip", request.remote_addr, max_age=3600, secure=True, httponly=True)
+                
+            database.execute_SQL("database.db", "INSERT INTO Cookie (cookie_id, own_ip) VALUES (?, ?)", (session_id, request.remote_addr))
+            
+            start_timer("cookie", request.remote_addr, 3600)
+            
+            return resp
+        else:
+            return jsonify({"type": "auth", "status": "pass_invalid"}), 200            
+    else:
+        return jsonify({"type": "error", "message": "invalid_request"}), 400
+
+
+# @app.route("/dashboard/api")
+# def dashoard_api():
+    
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=("static/https/certificate.crt", "static/https/private.key"))
